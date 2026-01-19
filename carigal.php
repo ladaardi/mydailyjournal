@@ -3,7 +3,7 @@ include "koneksi.php";
 
 $keyword = $_POST['keyword'];
 
-$sql = "SELECT * FROM article 
+$sql = "SELECT * FROM gallery
         WHERE judul LIKE ? OR isi LIKE ? OR tanggal LIKE ? OR username LIKE ?
         ORDER BY tanggal DESC";
 $stmt = $conn->prepare($sql);
@@ -41,7 +41,7 @@ while ($row = $hasil->fetch_assoc()) {
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Article</h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit gallery</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="post" action="" enctype="multipart/form-data">
@@ -86,13 +86,13 @@ while ($row = $hasil->fetch_assoc()) {
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Konfirmasi Hapus Article</h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Konfirmasi Hapus gallery</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="post" action="" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="formGroupExampleInput" class="form-label">Yakin akan menghapus artikel "<strong><?= $row["judul"] ?></strong>"?</label>
+                        <label for="formGroupExampleInput" class="form-label">Yakin akan menghapus gallery "<strong><?= $row["judul"] ?></strong>"?</label>
                         <input type="hidden" name="id" value="<?= $row["id"] ?>">
                         <input type="hidden" name="gambar" value="<?= $row["gambar"] ?>">
                     </div>

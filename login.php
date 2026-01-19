@@ -64,6 +64,7 @@ if (isset($_SESSION['username'])) {
                 <p id="errorMsg" class="text-danger"></p>
               </form>
                     <h4 class="mb-3">Form Login</h4>
+                    
                 </div>
             </div>
         </div>
@@ -72,8 +73,7 @@ if (isset($_SESSION['username'])) {
 
 <?php
 //set variable username dan password dummy
-$username = "admin";
-$password = "123456";
+
 
 //check apakah ada request dengan method POST yang dilakukan
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -82,6 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userInput = $_POST['user'];
     $passInput = $_POST['pass'];
 
+    
     // --- VALIDASI EMPTY FIELD ---
     if ($userInput == "") {
         echo "Username tidak boleh kosong!";
@@ -117,7 +118,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (!empty($row)) { 
             //jika data ada (berhasil), alihkan ke halaman admin
-            $_SESSION ['username'] =$username;//simpan variable username pada sesion
+            $_SESSION['login']   = true;
+            $_SESSION['id_user'] = $row['id_user'];
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['foto']     = $row['foto'];
+
             header("location:admin.php");
         } else {
             //jika data tidak ada (gagal), tetap di halaman login

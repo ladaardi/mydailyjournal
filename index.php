@@ -1,128 +1,178 @@
 <?php
-//menyertakan code dari file koneksi
 include "koneksi.php";
 ?>
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>mie sedaap</title>
-    <link rel="icon" href="icon.png">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  </head>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>mie sedaap</title>
 
-  <body>
+  <!-- ICON -->
+  <link rel="icon" href="icon.png">
 
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
-      <div class="container">
-        <a class="navbar-brand fw-bold" href="#">mie sedaap</a>
+  <!-- BOOTSTRAP -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        <span class="ms-3" id="realtime" style="font-weight: 500;"></span>
+  <!-- DARK MODE STYLE -->
+  <style>
+    body {
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+    [data-bs-theme="dark"] {
+      background-color: #121212;
+    }
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link" href="#">home</a></li>
-            <li class="nav-item"><a class="nav-link" href="#article">article</a></li>
-            <li class="nav-item"><a class="nav-link" href="#gallery">gallery</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    [data-bs-theme="dark"] .card {
+      background-color: #1e1e1e;
+    }
 
-    <!-- HERO -->
-    <!-- HERO -->
+    [data-bs-theme="dark"] footer a {
+      color: #fff !important;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#">mie sedaap</a>
+    <span class="ms-3 fw-medium" id="realtime"></span>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#article">Article</a></li>
+        <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link" href="#schedule">Schedule</a></li>
+        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+        <li class="nav-item">
+          <a class="nav-link" href="login.php">
+            <i class="bi bi-speedometer2"></i> Login
+          </a>
+        </li>
+
+        <!-- DARK / LIGHT TOGGLE -->
+        <li class="nav-item ms-2">
+          <button id="themeToggle" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-moon"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- HERO -->
 <section id="hero" class="text-center p-5 bg-danger-subtle text-sm-start">
   <div class="container">
     <div class="d-sm-flex flex-sm-row-reverse align-items-center">
-      <img src="mie soto.webp" class="img-fluid" width="300">
+      <img src="mie soto.webp" class="img-fluid" width="300" alt="mie soto">
       <div>
-        <p id="waktuHero"></p>
-
+        <p id="waktuHero" class="fw-medium"></p>
         <h1 class="fw-bold display-4">bikin kenyang sebentar</h1>
-
-        <!-- Teks + Waktu Digabung -->
         <h4 class="lead display-6">enak makan pas hujan</h4>
-        <p id="waktuHero" style="font-size: 18px; font-weight: 500; margin-top: -10px;"></p>
-
       </div>
     </div>
   </div>
 </section>
 
+<!-- ARTICLE -->
+<section id="article" class="text-center p-5">
+  <div class="container">
+    <h1 class="fw-bold display-4 pb-3">Article</h1>
 
-    <!-- ARTICLE -->
-    <section id="article" class="text-center p-5">
-      <div class="container">
-        <h1 class="fw-bold display-4 pb-3">article</h1>
-        <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+    <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+      <?php
+      $sql = "SELECT * FROM article ORDER BY tanggal DESC";
+      $hasil = $conn->query($sql);
+
+      if ($hasil && $hasil->num_rows > 0) {
+        while ($row = $hasil->fetch_assoc()) {
+      ?>
+        <div class="col">
+          <div class="card h-100">
+            <img src="img/<?= htmlspecialchars($row['gambar']); ?>" class="card-img-top" alt="gambar artikel">
+            <div class="card-body">
+              <h5 class="card-title"><?= htmlspecialchars($row['judul']); ?></h5>
+              <p class="card-text"><?= htmlspecialchars($row['isi']); ?></p>
+            </div>
+            <div class="card-footer">
+              <small class="text-body-secondary"><?= $row['tanggal']; ?></small>
+            </div>
+          </div>
+        </div>
+      <?php
+        }
+      } else {
+        echo "<p class='text-muted'>Belum ada artikel.</p>";
+      }
+      ?>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" class="text-center p-5 bg-danger-subtle">
+  <div class="container">
+    <h1 class="fw-bold display-4 pb-3">Gallery</h1>
+
+    <?php
+    $sql = "SELECT * FROM gallery ORDER BY tanggal DESC";
+    $hasil = $conn->query($sql);
+
+    if ($hasil && $hasil->num_rows > 0) {
+    ?>
+
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
 
         <?php
-        $sql = "SELECT * FROM article ORDER BY tanggal DESC";
-        $hasil = $conn->query($sql); 
-        print_r($hasil);
-
-        while($row = $hasil->fetch_assoc()){
-        
-
+        $active = "active";
+        while ($row = $hasil->fetch_assoc()) {
+        ?>
+          <div class="carousel-item <?= $active; ?>">
+            <img src="upload/<?= $row['gambar']; ?>"
+                 class="d-block w-100"
+                 alt="<?= $row['judul']; ?>">
+          </div>
+        <?php
+          $active = ""; // hanya item pertama yang active
+        }
         ?>
 
-          <!-- cool begin -->
-          <div class="col">
-            <div class="card h-100">
-              <img src="img/<?= $row["gambar"]?>" class="card-img-top"alt=.../>
-              <div class="card-body">
-                <h5 class="card-title">mie goreng</h5>
-                <p class="card-text">Mie goreng merupakan salah satu makanan populer</p>
-                <?=$row["isi"]?>
-              </div>
-            <div class="card-footer">
-               <small class="text-body-secondary">
-              <?= $row['tanggal']; ?>
-           </small>
-            </div>
-
-          </div>
-         </div>
-
-          <!--cool end -->
-
-          <?php
-          }
-          ?>
-        </div>
       </div>
-    </section>
 
-    <!-- GALLERY -->
-    <section id="gallery" class="text-center p-5 bg-danger-subtle">
-      <div class="container">
-        <h1 class="fw-bold display-4 pb-3">gallery</h1>
-        <div id="carouselExample" class="carousel slide">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img src="kabeh.webp" class="d-block w-100">
-            </div>
-          </div>
+      <button class="carousel-control-prev" type="button"
+              data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
 
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-          </button>
+      <button class="carousel-control-next" type="button"
+              data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
 
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-          </button>
-        </div>
-      </div>
-    </section>
+    </div>
 
-    <!-- SCHEDULE -->
+    <?php
+    } else {
+        echo "<p class='text-muted'>Belum ada gallery.</p>";
+    }
+    ?>
+
+  </div>
+</section>
+
+    
+     <!-- SCHEDULE -->
     <section id="schedule" class="text-center p-5 bg-white">
       <div class="container">
         <h2 class="fw-bold mb-4">Schedule</h2>
@@ -242,81 +292,55 @@ include "koneksi.php";
       </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="text-center p-5">
-      <div>
-        <a href="https://www.instagram.com/ladaardi_s.l/" class="text-dark p-2 h2"><i class="bi bi-instagram"></i></a>
-        <a href="https://twitter.com/udinusofficial" class="text-dark p-2 h2"><i class="bi bi-twitter"></i></a>
-        <a href="https://wa.me/+6285702307771" class="text-dark p-2 h2"><i class="bi bi-whatsapp"></i></a>
-      </div>
-      <div>ladaardi sachio lawidyarthdana &copy;2025</div>
-    </footer>
-
+<!-- FOOTER -->
+<footer class="text-center p-5">
+  <div>
+    <a href="https://www.instagram.com/ladaardi_s.l/" class="text-dark p-2 h2"><i class="bi bi-instagram"></i></a>
+    <a href="https://twitter.com/udinusofficial" class="text-dark p-2 h2"><i class="bi bi-twitter"></i></a>
+    <a href="https://wa.me/+6285702307771" class="text-dark p-2 h2"><i class="bi bi-whatsapp"></i></a>
+  </div>
+  <div>ladaardi sachio lawidyarthdana &copy;2025</div>
+</footer>
+    
     <!-- SCROLL BUTTON -->
     <button id="scrollTopBtn" class="btn btn-danger rounded-circle p-3" style="display:none; position:fixed; bottom:20px; right:20px;">
       <i class="bi bi-arrow-up"></i>
     </button>
+<!-- SCRIPT -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- SCRIPT -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
-   <script type="text/javascript">
-  function updateWaktu() {
-    const waktu = new Date();
-
-    const tanggal = waktu.getDate();
-    const bulan = waktu.getMonth();
-    const tahun = waktu.getFullYear();
-    const jam = waktu.getHours();
-    const menit = waktu.getMinutes();
-    const detik = waktu.getSeconds();
-
-    const arrBulan = ["1","2","3","4","5","6","7","8","9","10","11","12"];
-
-    const tanggal_full = tanggal + "/" + arrBulan[bulan] + "/" + tahun;
-    const jam_full =
-      jam.toString().padStart(2, "0") + ":" +
-      menit.toString().padStart(2, "0") + ":" +
-      detik.toString().padStart(2, "0");
-
-    // MASUKKAN KE HERO
-    const heroWaktu = document.getElementById("waktuHero");
-    if (heroWaktu) {
-      heroWaktu.innerHTML = tanggal_full + " - " + jam_full;
-    }
-
-    // MASUKKAN KE NAVBAR
-    const navRealtime = document.getElementById("realtime");
-    if (navRealtime) {
-      navRealtime.innerHTML = tanggal_full + " • " + jam_full;
-    }
-  }
-
-  // Update setiap detik
-  setInterval(updateWaktu, 1000);
-
-  // Jalankan pertama kali
-  updateWaktu();
-
-  //scroll on top
-  const scrollBtn = document.getElementById("scrollTopBtn");
-
-  window.addEventListener("scroll", function () {
-    if (window.scrollY > 200) {
-      scrollBtn.style.display = "block";
-    } else {
-      scrollBtn.style.display = "none";
-    }
-  });
-
-  scrollBtn.addEventListener("click", function () {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  });
+<!-- JAM REALTIME -->
+<script>
+function updateWaktu() {
+  const w = new Date();
+  const full = `${w.getDate()}/${w.getMonth()+1}/${w.getFullYear()} - 
+               ${w.getHours().toString().padStart(2,'0')}:${w.getMinutes().toString().padStart(2,'0')}:${w.getSeconds().toString().padStart(2,'0')}`;
+  document.getElementById("waktuHero").innerHTML = full;
+  document.getElementById("realtime").innerHTML = full;
+}
+setInterval(updateWaktu, 1000);
+updateWaktu();
 </script>
 
+<!-- DARK / LIGHT SCRIPT -->
+<script>
+const toggleBtn = document.getElementById("themeToggle");
+const icon = toggleBtn.querySelector("i");
 
-  </body>
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme) {
+  document.documentElement.setAttribute("data-bs-theme", savedTheme);
+  icon.className = savedTheme === "dark" ? "bi bi-sun" : "bi bi-moon";
+}
+
+toggleBtn.addEventListener("click", () => {
+  const html = document.documentElement;
+  const theme = html.getAttribute("data-bs-theme") === "dark" ? "light" : "dark";
+  html.setAttribute("data-bs-theme", theme);
+  localStorage.setItem("theme", theme);
+  icon.className = theme === "dark" ? "bi bi-sun" : "bi bi-moon";
+});
+</script>
+
+</body>
 </html>

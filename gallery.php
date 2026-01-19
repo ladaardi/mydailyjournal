@@ -1,8 +1,10 @@
+
+
 <div class="container">
     	<div class="row mb-2">
         <div class="col-md-6">
         <button type="button" class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#modalTambah">
-        <i class="bi bi-plus-lg"></i> Tambah Article
+        <i class="bi bi-plus-lg"></i> Tambah gallery
         </button>
         </div>
         <div class="col-md-6">
@@ -33,8 +35,8 @@
                 </tbody>
             </table>
         </div>
-        <!--modal tambah article-->
-        <!-- modal tambah article -->
+        <!--modal tambah gallery-->
+        <!-- modal tambah gallery -->
 <div class="modal fade" id="modalTambah" tabindex="-1" aria-labelledby="modalTambahLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -42,7 +44,7 @@
       <form method="post" action="" enctype="multipart/form-data">
 
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="modalTambahLabel">Tambah Article</h1>
+          <h1 class="modal-title fs-5" id="modalTambahLabel">Tambah gallery</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
@@ -77,7 +79,7 @@
 <script>
     function loadData(keyword = '') {
         $.ajax({
-            url: "cari.php",
+            url: "carigal.php",
             type: "POST",
             data: {
                 keyword: keyword
@@ -102,11 +104,12 @@
 
 </script>
 <?php
-
+include "koneksi.php";   
 include "uplodfoto.php";
 
+
 /* =========================
-   SIMPAN / UPDATE ARTICLE
+   SIMPAN / UPDATE gallery
 ========================= */
 if (isset($_POST['simpan'])) {
 
@@ -126,7 +129,7 @@ if (isset($_POST['simpan'])) {
         } else {
             echo "<script>
                 alert('".$cek_upload['message']."');
-                document.location='admin.php?page=article';
+                document.location='admin.php?page=gallery';
             </script>";
             die;
         }
@@ -145,7 +148,7 @@ if (isset($_POST['simpan'])) {
         }
 
         $stmt = $conn->prepare("
-            UPDATE article 
+            UPDATE gallery 
             SET judul=?, isi=?, gambar=?, tanggal=?, username=?
             WHERE id=?
         ");
@@ -155,7 +158,7 @@ if (isset($_POST['simpan'])) {
     // INSERT
     else {
         $stmt = $conn->prepare("
-            INSERT INTO article (judul, isi, gambar, tanggal, username)
+            INSERT INTO gallery (judul, isi, gambar, tanggal, username)
             VALUES (?,?,?,?,?)
         ");
         $stmt->bind_param("sssss", $judul, $isi, $gambar, $tanggal, $username);
@@ -172,11 +175,11 @@ if (isset($_POST['simpan'])) {
     $stmt->close();
     $conn->close();
 
-    echo "<script>document.location='admin.php?page=article';</script>";
+    echo "<script>document.location='admin.php?page=gallery';</script>";
 }
 
 /* =========================
-   HAPUS ARTICLE (FIX)
+   HAPUS gallery (FIX)
 ========================= */
 if (isset($_POST['hapus'])) {
 
@@ -188,7 +191,7 @@ if (isset($_POST['hapus'])) {
         unlink("img/".$gambar);
     }
 
-    $stmt = $conn->prepare("DELETE FROM article WHERE id=?");
+    $stmt = $conn->prepare("DELETE FROM gallery WHERE id=?");
     $stmt->bind_param("i", $id);
     $hapus = $stmt->execute();
 
@@ -201,6 +204,6 @@ if (isset($_POST['hapus'])) {
     $stmt->close();
     $conn->close();
 
-    echo "<script>document.location='admin.php?page=article';</script>";
+    echo "<script>document.location='admin.php?page=gallery';</script>";
 }
 ?>
